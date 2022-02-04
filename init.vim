@@ -12,6 +12,9 @@ call plug#begin('~/.vim/plugged')
     Plug 'scrooloose/nerdtree'
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
+    Plug 'sbdchd/neoformat'
+    Plug 'tmhedberg/SimpylFold'
+    Plug 'averms/black-nvim', {'do': ':UpdateRemotePlugins'}
 " Syntax
     Plug 'tpope/vim-markdown'
     Plug 'ap/vim-css-color' "Displays a preview of colors with CSS
@@ -21,18 +24,36 @@ call plug#begin('~/.vim/plugged')
     Plug 'vim-syntastic/syntastic'
     " Plug 'nvie/vim-flake8'
     Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
+    Plug 'jiangmiao/auto-pairs'
+    Plug 'scrooloose/nerdcommenter'
+    Plug 'neomake/neomake'
+    " Plug 'terryma/vim-multiple-cursors'
 " Color-schemes
     Plug 'gruvbox-community/gruvbox'
     Plug 'dylanaraps/wal.vim' "My wallpaper dependant theme
+    Plug 'ryanoasis/vim-devicons'
+    Plug 'dracula/vim', { 'as': 'dracula' }
+" Auto completion
+    Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
+    Plug 'zchee/deoplete-jedi'
+    Plug 'davidhalter/jedi-vim'
 call plug#end()
 
 " colorscheme gruvbox
-set background=dark
-let g:airline_theme='violet'
+" colorscheme dracula
+colorscheme wal
+" set background=dark
+" let g:airline_theme='violet'
+let g:airline_theme='bubblegum'
 let g:airline_powerline_fonts=1
+" let g:airline_symbols.colnr = 'cn'
+" let g:airline_symbols_ascii=1
+let g:deoplete#enable_at_startup = 1
 hi Search guibg=Grey guifg=Cyan
 hi cursorcolumn guibg=Grey
-colorscheme wal
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+autocmd BufWritePre *.py call Black()
+
 let g:limelight_conceal_ctermfg = 'gray'
 let g:limelight_conceal_ctermfg = 240
 let g:limelight_conceal_guifg = 'DarkGray'
@@ -68,6 +89,9 @@ set clipboard+=unnamedplus
 
 " remove trailing whitespace on save
 autocmd BufWritePre * %s/\s\+$//e
+
+" italics
+hi Comment cterm=italic gui=italic
 
 " Leader
 let mapleader=","
@@ -108,3 +132,28 @@ nnoremap <leader>sv :source ~/.config/nvim/init.vim<CR>
 
 " cursor default
 " set guicursor=
+
+" Neoformat alias
+nnoremap <leader>cf :Neoformat! python yapf<CR>
+
+" jedi-vim
+let g:jedi#documentation_command = "<C-d>"
+
+" disable autocompletion, because we use deoplete for completion
+let g:jedi#completions_enabled = 0
+
+" open the go-to function in split, not another buffer
+let g:jedi#use_splits_not_buffers = "right"
+
+" NERDTree
+nnoremap <leader>nt :NERDTree<CR>
+
+" pylint
+let g:neomake_python_enabled_makers = ['flake8']
+
+" VSCodium integration
+if exists('g:vscode')
+    " VSCode extension
+else
+    " ordinary neovim
+endif
